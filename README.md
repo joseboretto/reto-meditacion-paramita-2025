@@ -21,6 +21,8 @@ This is a single-page web application designed to help you track your progress t
 
 The tracker provides an elegant, user-friendly interface inspired by Paramita's warm and calming aesthetic, helping you stay motivated and organized throughout your meditation journey.
 
+Link: https://reto-meditacion-paramita-2025-git-main-jose-borettos-projects.vercel.app?_vercel_share=4czharfAEuuuGnyqSFP2LMmGK4iCLEI8
+
 ## ✨ Features
 
 ### 🎯 Core Functionality
@@ -51,6 +53,9 @@ The tracker provides an elegant, user-friendly interface inspired by Paramita's 
 *Fully responsive design for meditation on-the-go*
 
 
+<p align="center">
+    <img src="https://github.com/joseboretto/reto-meditacion-paramita-2025/blob/main/mobile.png?raw=true" alt="mobile" width="200">
+</p>
 
 ## 🚀 Getting Started
 
