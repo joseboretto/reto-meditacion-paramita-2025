@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reto Meditación - Paramita</title>
+    <title>Reto Meditación 14 dias - Paramita</title>
     <style>
         * {
             margin: 0;
@@ -73,6 +73,11 @@
             color: white;
             font-weight: bold;
             font-size: 0.9rem;
+            min-width: 50px;
+        }
+        
+        .progress-bar.empty {
+            min-width: 50px;
         }
 
         .stats {
@@ -170,6 +175,20 @@
             height: 30px;
             cursor: pointer;
             accent-color: #8b6f47;
+        }
+
+        .completion-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #5a8f5a;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(90, 143, 90, 0.3);
         }
 
         .youtube-link {
@@ -304,7 +323,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>🧘 Reto Meditación</h1>
+            <h1>🧘 Reto Meditación 14 dias</h1>
             <p class="subtitle">Llena el cuerpo de respiración - Paramita</p>
         </header>
 
@@ -389,18 +408,54 @@
             const progressBar = document.getElementById('progressBar');
             progressBar.style.width = percentage + '%';
             progressBar.textContent = percentage + '%';
+            
+            if (percentage === 0) {
+                progressBar.classList.add('empty');
+            } else {
+                progressBar.classList.remove('empty');
+            }
         }
 
         function toggleMeditation(id) {
             const progress = loadProgress();
-            progress[id] = !progress[id];
+            const dates = loadDates();
+            
+            if (progress[id]) {
+                // Unchecking - remove date
+                progress[id] = false;
+                delete dates[id];
+            } else {
+                // Checking - add current date
+                progress[id] = true;
+                dates[id] = new Date().toISOString();
+            }
+            
             saveProgress(progress);
+            saveDates(dates);
             renderMeditations();
             updateStats();
         }
 
+        function loadDates() {
+            const saved = localStorage.getItem('meditationDates');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        function saveDates(dates) {
+            localStorage.setItem('meditationDates', JSON.stringify(dates));
+        }
+
+        function formatDate(isoDate) {
+            const date = new Date(isoDate);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
         function renderMeditations() {
             const progress = loadProgress();
+            const dates = loadDates();
             const grid = document.getElementById('meditationsGrid');
             
             grid.innerHTML = meditations.map(med => `
@@ -419,6 +474,11 @@
                             >
                         </div>
                     </div>
+                    ${progress[med.id] && dates[med.id] ? `
+                        <div class="completion-badge">
+                            ✓ Completada: ${formatDate(dates[med.id])}
+                        </div>
+                    ` : ''}
                     <a href="${med.url}" target="_blank" class="youtube-link">
                         <span class="youtube-icon">▶</span>
                         Ver en YouTube
@@ -437,6 +497,7 @@
 
         function resetProgress() {
             localStorage.removeItem('meditationProgress');
+            localStorage.removeItem('meditationDates');
             hideResetModal();
             renderMeditations();
             updateStats();
